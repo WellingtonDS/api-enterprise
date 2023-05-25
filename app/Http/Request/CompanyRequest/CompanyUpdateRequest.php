@@ -15,7 +15,7 @@ class CompanyUpdateRequest extends FormRequest
     {
         return [
             'cnpj' => 'required',
-            'nome_fantasia' => 'required',
+            'name_fantasia' => 'required',
             'razao_social' => 'required'
         ];
     }

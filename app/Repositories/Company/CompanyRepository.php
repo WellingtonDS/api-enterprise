@@ -22,7 +22,7 @@ class CompanyRepository
         {
                 return $this->model->create([
                         'cnpj' => bcrypt($data['cnpj']),
-                        'nome_fantasia' => $data['nome_fantasia'],
+                        'name_fantasia' => $data['name_fantasia'],
                         'razao_social' => $data['razao_social'],
                 ]);
         }

@@ -14,7 +14,7 @@ class CreateExpenseTable extends Migration
     public function up()
     {
         Schema::create('expense', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('company_id');
             $table->decimal('value', 10, 2);

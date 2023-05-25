@@ -100,36 +100,36 @@ class ExpenseController extends Controller
     }
 
     /**
-     *  realiza uma junção com as tabelas "usuarios", "empresas" e "usuarios" (duas vezes) para obter as informações adicionais necessárias
+     *  realiza uma junção com as tabelas "users", "company" e "usuarios" (duas vezes) para obter as informações adicionais necessárias
      */
     public function listarDespesasComInfoAdicional()
     {
-        $expenses = Expense::join('usuarios', 'despesas.user_id', '=', 'usuarios.id')
-                            ->join('empresas', 'despesas.company_id', '=', 'empresas.id')
-                            ->leftJoin('usuarios as aprovador', 'despesas.aprovador_id', '=', 'aprovador.id')
-                            ->select('despesas.*', 'usuarios.nome as nome_usuario', 'empresas.nome_fantasia', 
-                                    'empresas.razao_social', 'aprovador.nome as nome_aprovador')
+        $expenses = Expense::join('users', 'expense.user_id', '=', 'users.id')
+                            ->join('company', 'expense.company_id', '=', 'company.id')
+                            ->leftJoin('users as approved', 'expense.approved_id', '=', 'approved.id')
+                            ->select('expense.*', 'users.name as name_user', 'company.name_fantasia', 
+                                    'company.razao_social', 'approved.name as name_approved')
                             ->get();
 
         $expensesComInfoAdicional = $expenses->map(function($expense) {
             $situacao = $expense->situacao == 'A' ? 'Aprovado' : 'Rejeitado';
-            $justificativa = $expense->situacao == 'R' ? $expense->justificativa : null;
+            $justification = $expense->situacao == 'R' ? $expense->justification : null;
 
             return [
                 'id' => $expense->id,
                 'value' => $expense->valor,
-                'usuario' => $expense->nome_usuario,
-                'empresa' => $expense->nome_fantasia . ' - ' . $expense->razao_social,
+                'usuario' => $expense->name_user,
+                'company' => $expense->name_fantasia . ' - ' . $expense->razao_social,
                 'situacao' => $situacao,
-                'aprovador' => $expense->nome_aprovador,
+                'approved' => $expense->name_approved,
                 'date_approved_refused' => $expense->date_approved_refused,
-                'justification_refused' => $justificativa
+                'justification_refused' => $justification
             ];
         });
 
         return response()->json([
-            'message' => 'Despesas com informações adicionais',
-            'despesas' => $expensesComInfoAdicional
+            'message' => 'expense com informações adicionais',
+            'expense' => $expensesComInfoAdicional
         ]);
     }
 
